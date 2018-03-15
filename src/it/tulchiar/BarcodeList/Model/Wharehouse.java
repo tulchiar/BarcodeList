@@ -35,20 +35,13 @@ public class Wharehouse {
 	public void addBox(Box box) throws RuntimeException {
 		
 		if(box == null) {
-			System.out.println("Box non può essere Null");
-			throw(new RuntimeException("Box non può essere Null"));
-		} else {
-//			System.out.println(box);
+			throw(new RuntimeException("Box non puÃ² essere Null"));
 		}
 
 		if(boxList.contains(box)) {
-			System.out.println("Box già esistente");
-			throw(new RuntimeException("Box già esistente"));
-		} else {
-//			System.out.println(box);
-		}
-		
-		
+			throw(new RuntimeException("Box giÃ  esistente"));
+		} 
+				
 		boxList.add(box);
 	}
 	
