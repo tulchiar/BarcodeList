@@ -4,13 +4,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import it.tulchiar.BarcodeList.Model.Box;
 import it.tulchiar.BarcodeList.Model.BoxFactory;
-import it.tulchiar.BarcodeList.Model.BoxFactory.BoxType;
+import it.tulchiar.BarcodeList.Model.BoxFactory.BoxBarcodeType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -25,7 +23,7 @@ public class BoxDAO {
 		
 		DBConnection conn = new DBConnection();
 		
-		String sql = "SELECT `idBox`, `barcode`, `customer`, `inDate`, `splitDate`, `note` FROM boxes";
+		String sql = "SELECT `idBox`, `number`, `customer`, `inDate`, `splitDate`, `note` FROM boxes";
 		
 		PreparedStatement ps = conn.getConnection().prepareStatement(sql);
 	
@@ -36,7 +34,7 @@ public class BoxDAO {
 		while (rs.next()) {
 			
 			Integer idBox = rs.getInt(Column.idBox.toString());
-			String barcode = rs.getString(Column.barcode.toString());
+			String number = rs.getString(Column.number.toString());
 			String customer = rs.getString(Column.customer.toString());
 			LocalDate inDate = rs.getDate(Column.inDate.toString()).toLocalDate();
 			
@@ -50,7 +48,7 @@ public class BoxDAO {
 			String note = rs.getString(Column.note.toString());
 			
 			
-			Box b = BoxFactory.create(BoxType.type1, barcode, customer);
+			Box b = BoxFactory.create(number, customer);
 		
 			b.setIdBox(rs.getInt(Column.idBox.toString()));
 			b.setIdBox(idBox);
@@ -73,6 +71,7 @@ public class BoxDAO {
 			boxes.add(b);			
 		}
 		
+		conn.getConnection().close();
 		return boxes;
 	}
 	
@@ -81,7 +80,7 @@ public class BoxDAO {
 		
 		
 		String sql = "INSERT INTO `BarcodeList`.`Boxes`" + 
-				" (`barcode`," + 
+				" (`number`," + 
 				" `inDate`," + 
 				" `splitDate`," + 
 				" `customer`," + 
@@ -95,7 +94,7 @@ public class BoxDAO {
 			
 			PreparedStatement ps = conn.getConnection().prepareStatement(sql);
 			
-			ps.setString(1, box.getBarcode());
+			ps.setString(1, box.getBoxNumber());
 			
 			if(box.getInDate() != null) {				
 				ps.setDate(2, Date.valueOf(box.getInDate()));
@@ -112,7 +111,14 @@ public class BoxDAO {
 			ps.setString(4, box.getCustomer());
 			ps.setString(5, box.getNote());
 			
-			return (ps.executeUpdate() > 0) ? true : false;
+			Boolean result = ps.executeUpdate() > 0;
+			if(result) {
+				conn.getConnection().close();
+				return true;
+			} else {
+				conn.getConnection().close();
+				return false;
+			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -128,22 +134,22 @@ public class BoxDAO {
 	 * @return ObservableList<Shipment>
 	 * @throws SQLException
 	 */
-	public static Box getBox(String barcodeToFind) throws SQLException {
+	public static Box getBox(String boxNumber) throws SQLException {
 		
 		DBConnection conn = new DBConnection();
 		
-		String sql = "SELECT `idBox`, `barcode`, `customer`, `inDate`, `splitDate`, `note` FROM boxes"
-				+ " WHERE `barcode` = ?";
+		String sql = "SELECT `idBox`, `number`, `customer`, `inDate`, `splitDate`, `note` FROM boxes"
+				+ " WHERE `number` = ?";
 		
 		PreparedStatement ps = conn.getConnection().prepareStatement(sql);
-		ps.setString(1, barcodeToFind);
+		ps.setString(1, boxNumber);
 		
 		ResultSet rs = ps.executeQuery();
-		
+			
 		while (rs.next()) {
 			
 			Integer idBox = rs.getInt(Column.idBox.toString());
-			String barcode = rs.getString(Column.barcode.toString());
+			String number = rs.getString(Column.number.toString());
 			String customer = rs.getString(Column.customer.toString());
 			LocalDate inDate = rs.getDate(Column.inDate.toString()).toLocalDate();
 			
@@ -157,10 +163,11 @@ public class BoxDAO {
 			String note = rs.getString(Column.note.toString());
 			
 			
-			Box b = BoxFactory.create(BoxType.type1, barcode, customer);
+			Box b = BoxFactory.create(number);
 		
 			b.setIdBox(rs.getInt(Column.idBox.toString()));
 			b.setIdBox(idBox);
+			b.setCustomer(customer);
 			b.setInDate(inDate);
 			b.setSplitDate(splitDate);
 			b.setNote(note);
@@ -175,9 +182,12 @@ public class BoxDAO {
 				date = LocalDate.parse("2000-01-01");
 				b.inDateProperty().set(date);
 			}		
+			
+			conn.getConnection().close();
 			return b;
 		}
 		
+		conn.getConnection().close();
 		return null;
 	}
 }

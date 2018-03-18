@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
 
 public class Box {
 	private IntegerProperty idBox = new SimpleIntegerProperty();
-	private StringProperty barcode = new SimpleStringProperty();
+	private StringProperty boxNumber = new SimpleStringProperty();
 	private StringProperty customer = new SimpleStringProperty();
 	private StringProperty note = new SimpleStringProperty();
 	private ObjectProperty<LocalDate> inDate = new SimpleObjectProperty<LocalDate>();
@@ -20,25 +20,25 @@ public class Box {
 	
 	public Box() {
 		this.idBox.setValue(0);
-		this.barcode.setValue("New_Barcode");
+		this.boxNumber.setValue("New_Barcode");
 		this.customer.setValue("");
 		this.note.setValue("");
 		this.inDate.setValue(LocalDate.now());
 		this.splitDate.setValue(null);
 	}
 
-	public Box(String barcode) {
+	public Box(String boxNumber) {
 		this.idBox.setValue(0);
-		this.barcode.setValue(barcode);
+		this.boxNumber.setValue(boxNumber);
 		this.customer.setValue("");
 		this.note.setValue("");
 		this.inDate.setValue(LocalDate.now());
 		this.splitDate.setValue(null);
 	}
 	
-	public Box(String barcode, String customer) {
+	public Box(String boxNumber, String customer) {
 		this.idBox.setValue(0);
-		this.barcode.setValue(barcode);
+		this.boxNumber.setValue(boxNumber);
 		this.customer.setValue(customer);
 		this.note.setValue("");
 		this.inDate.setValue(LocalDate.now());
@@ -57,16 +57,16 @@ public class Box {
 		this.idBoxProperty().set(idBox);
 	}
 	
-	public final StringProperty barcodeProperty() {
-		return this.barcode;
+	public final StringProperty boxNumberProperty() {
+		return this.boxNumber;
 	}
 	
-	public final String getBarcode() {
-		return this.barcodeProperty().get();
+	public final String getBoxNumber() {
+		return this.boxNumberProperty().get();
 	}
 	
-	public final void setBarcode(final String barcode) {
-		this.barcodeProperty().set(barcode);
+	public final void setBoxNumber(final String boxNumber) {
+		this.boxNumberProperty().set(boxNumber);
 	}
 	
 	public final ObjectProperty<LocalDate> inDateProperty() {
@@ -128,7 +128,7 @@ public class Box {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((barcode.getValue() == null) ? 0 : barcode.getValue().hashCode());
+		result = prime * result + ((boxNumber.getValue() == null) ? 0 : boxNumber.getValue().hashCode());
 		return result;
 	}
 
@@ -141,17 +141,17 @@ public class Box {
 		if (getClass() != obj.getClass())
 			return false;
 		Box other = (Box) obj;
-		if (barcode == null) {
-			if (other.barcode.getValue() != null)
+		if (boxNumber == null) {
+			if (other.boxNumber.getValue() != null)
 				return false;
-		} else if (barcode.getValue() != other.barcode.getValue())
+		} else if (boxNumber.getValue() != other.boxNumber.getValue())
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Box [idBox=" + idBox.getValue() + ", barcode=" + barcode.getValue() + ", creationDate=" + inDate.getValue() + ", splitDate="
+		return "Box [idBox=" + idBox.getValue() + ", barcode=" + boxNumber.getValue() + ", creationDate=" + inDate.getValue() + ", splitDate="
 				+ splitDate.getValue() + ", customer=" + customer.getValue() + "]";
 	}
 

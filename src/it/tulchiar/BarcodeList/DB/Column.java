@@ -2,7 +2,7 @@ package it.tulchiar.BarcodeList.DB;
 
 public enum Column {
 	idBox, 
-	barcode, 
+	number, 
 	customer, 
 	inDate, 
 	splitDate, 
