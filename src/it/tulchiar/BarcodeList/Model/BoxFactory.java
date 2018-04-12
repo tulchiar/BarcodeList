@@ -50,7 +50,7 @@ public class BoxFactory {
 			return box;
 		case type2: //XU004029804
 			
-			boxNumber = barcode.substring(4, 9);
+			boxNumber = barcode.substring(4, 11);
 			
 			box = new Box(boxNumber);
 			return box;
@@ -59,6 +59,12 @@ public class BoxFactory {
 		}
 	}
 	
+	
+	public static Box createFromBoxNumber(String boxNumber) {
+		
+		return new Box(boxNumber);
+		
+	}
 	
 	public static Box create(String boxNumber, String customer) {
 				

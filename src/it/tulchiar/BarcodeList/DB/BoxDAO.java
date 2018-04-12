@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 import it.tulchiar.BarcodeList.Model.Box;
 import it.tulchiar.BarcodeList.Model.BoxFactory;
-import it.tulchiar.BarcodeList.Model.BoxFactory.BoxBarcodeType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -163,7 +162,7 @@ public class BoxDAO {
 			String note = rs.getString(Column.note.toString());
 			
 			
-			Box b = BoxFactory.create(number);
+			Box b = BoxFactory.createFromBoxNumber(number);
 		
 			b.setIdBox(rs.getInt(Column.idBox.toString()));
 			b.setIdBox(idBox);
@@ -190,4 +189,32 @@ public class BoxDAO {
 		conn.getConnection().close();
 		return null;
 	}
+
+	public static Boolean setSplitDate(Integer idBox) throws SQLException {
+		
+		String sql = "UPDATE `BarcodeList`.`Boxes` SET `splitDate`= ? WHERE `idBox`=?;";
+		
+		DBConnection conn = new DBConnection();
+		try {
+			PreparedStatement ps = conn.getConnection().prepareStatement(sql);
+			ps.setDate(1, Date.valueOf(LocalDate.now()));
+			ps.setInt(2, idBox);
+			
+			if(ps.executeUpdate() > 0) {
+				return true;
+			}
+			
+			conn.getConnection().close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			if(!conn.getConnection().isClosed()) conn.getConnection().close();
+				
+			e.printStackTrace();
+			return false;
+		}
+
+		return false;
+		
+	}
+
 }
